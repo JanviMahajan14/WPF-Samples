@@ -1,0 +1,35 @@
+{
+  "$schema": "https://aka.ms/windowsplugin.schema.json",
+  "schema_version": "v1",
+  "name_for_human": "StickyNotePlugin",
+  "description_for_human": "Plugin to handle sticky note functionalities",
+  "description_for_model": "Plugin to handle sticky note functionalities",
+  "logo_url": "https://www.microsoft.com/logo.png",
+  "contact_email": "janvimahajan@outlook.com",
+  "legal_info_url": "https://www.microsoft.com/legal",
+  "functions": [
+    {
+      "name": "SayHello",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "personName": {
+            "type": "string",
+            "description": "Name of person to say hi to"
+          }
+        },
+        "required": [ "personName" ]
+      },
+      "states": {
+        "reasoning": {
+          "description": "\n# `SayHello(**params) -> str`: This tool is used to say hello to a person. `params` is the `person` the user wants to say hello to.",
+          "instructions": "\n- Decide whether to invoke `SayHello(**params)`:\n    * Is the user directly requesting me to say hello? If so, invoke `SayHello(**params)`. Otherwise, I **must not** invoke `SayHello(**params)`."
+        }
+      },
+      "returns": {
+        "type": "string",
+        "description": "Result of 'Hello World' and person input'"
+      }
+    }
+  ]
+}

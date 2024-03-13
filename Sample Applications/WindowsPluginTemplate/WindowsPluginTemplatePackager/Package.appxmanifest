@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+         xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+         xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+         xmlns:wincap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/windowscapabilities"
+         xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+         IgnorableNamespaces="uap rescap">
+	<Identity
+      Name="WindowsPluginTemplate"
+      Publisher="CN=janvimahajan"
+      Version="1.0.0.0" />
+	<Properties>
+		<DisplayName>WindowsPluginTemplate</DisplayName>
+		<PublisherDisplayName>janvimahajan</PublisherDisplayName>
+		<Logo>Images\StoreLogo.png</Logo>
+	</Properties>
+	<Dependencies>
+		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+		<TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22000.0" />
+	</Dependencies>
+	<Resources>
+		<Resource Language="x-generate" />
+	</Resources>
+	<Applications>
+		<!-- Applications are added here from the .appxfragment files -->
+		<Application Id="App" Executable="StickyNotesPlugin.exe" EntryPoint="Windows.FullTrustApplication">
+			<uap:VisualElements
+              DisplayName="StickyNote"
+              Description="StickyNote"
+              Square150x150Logo="Images\Square150x150Logo.png"
+              Square44x44Logo="Images\Square44x44Logo.png"
+              BackgroundColor="transparent">
+				<uap:DefaultTile/>
+			</uap:VisualElements>
+			<Extensions>
+				<uap5:Extension Category="windows.appExecutionAlias" >
+					<uap5:AppExecutionAlias>
+						<uap5:ExecutionAlias Alias="StickyNotesPlugin.exe" />
+					</uap5:AppExecutionAlias>
+				</uap5:Extension>
+				<uap3:Extension Category="windows.appExtension">
+					<uap3:AppExtension Name="com.microsoft.windows.ai.plugins" DisplayName="StickyNotesPlugin" Id="StickyNotesPlugin" PublicFolder="Public">
+						<uap3:Properties>
+							<AISettings Path="StickyNotesPlugin\ai-settings.json" />
+							<JSONSchema Path="StickyNotesPlugin\WindowsPluginTemplate-schema.jsonc" />
+							<Activation>
+								<!-- Points to the application execution alias for this package  -->
+								<ExecutionAlias Alias="StickyNotesPlugin.exe" />
+							</Activation>
+						</uap3:Properties>
+					</uap3:AppExtension>
+				</uap3:Extension>
+			</Extensions>
+		</Application>
+	</Applications>
+	<Capabilities>
+		<!-- Capabilities are added here from the .appxfragment files -->
+		<rescap:Capability Name="runFullTrust" />
+		<rescap:Capability Name="unvirtualizedResources"/>
+	</Capabilities>
+	<Extensions>
+		<!-- Extensions are added here from the .appxfragment files -->
+	</Extensions>
+</Package>

@@ -1,0 +1,455 @@
+﻿{
+  "type": "object",
+  "description": "DO NOT UPDATE THIS FILE!!!! SOURCE: https://msasg.visualstudio.com/WIT%20Engineering/_git/TuringAtWork?path=/services/TuringBot/Microsoft.TuringBot.Common/Plugins/MicrosoftAiPluginManifestJsonSchema.json&version=GBmaster&_a=contents. Any changes implemented here should also be reflected in the file of the same name in the WindowsSkills project. Added descriptions of properties. Added $schema as a valid property. Marked logo_url, contact_email, legal_info_url as required. Marked parameters.description as required. Marked states.reasoning.description, states.reasoning.instructions as required. Marked states.responding as optional. Marked confirmation.type, confirmation.title, confirmation.body as optional. Marked returns.type, returns.description as optional. Removed runtime, auth, apiType as they're not required for authoring.",
+  "properties": {
+    "$schema": {
+      "format": "uri",
+      "description": "Link to the JSON Schema that will be used to annotate and validate the structure, constraints, and data types of the confirming JSONs."
+    },
+    "schema_version": {
+      "type": "string",
+      "description": "Manifest schema version. Only supports ‘v2’."
+    },
+    "name_for_human": {
+      "type": "string",
+      "description": "Short, human-readable name for the plugin. 20 character max."
+    },
+    "description_for_model": {
+      "type": "string",
+      "description": "Name the model will use to target the plugin (no spaces allowed, only letters and numbers). 50 character max."
+    },
+    "description_for_human": {
+      "type": "string",
+      "description": "Human-readable description of the plugin. 100 character max."
+    },
+    "logo_url": {
+      "format": "uri",
+      "description": "URL used to fetch the logo. Suggested size: 128 x 128. Transparent backgrounds are supported. Must be an image, no GIFs are allowed."
+    },
+    "contact_email": {
+      "format": "email",
+      "description": "Email contact for safety/moderation, support, and deactivation. Separate multiple emails with a semi-colon."
+    },
+    "legal_info_url": {
+      "format": "uri",
+      "description": "URL of the terms of service for the plugin."
+    },
+    "privacy_policy_url": {
+      "format": "uri",
+      "description": "URL of the privacy policy for the plugin."
+    },
+    "functions": {
+      "type": "array",
+      "description": "List of functions that are exposed by the plugin. A 'function' is the operation that is invoked by the model to interact with external resources.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name the model will use to target the plugin. Only letters and numbers, no spaces allowed."
+          },
+          "parameters": {
+            "type": "object",
+            "description": "A list of parameters for the function.",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "The type of the function parameters object. Must be 'object'.",
+                "enum": [
+                  "object"
+                ]
+              },
+              "properties": {
+                "type": "object",
+                "description": "Map from parameter names to description of parameter requirements.",
+                "additionalProperties": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "The type for the parameter. Must be one of: string, array, boolean, integer, number.",
+                          "enum": [
+                            "string",
+                            "array",
+                            "boolean",
+                            "integer",
+                            "number"
+                          ]
+                        },
+                        "items": {
+                          "$recursiveRef": "#",
+                          "description": "If type is 'array', items will recursively reference the entire schema."
+                        },
+                        "enum": {
+                          "type": "array",
+                          "description": "An array that specifies the permissible string values for the property."
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "The description of the parameter."
+                        }
+                      },
+                      "if": {
+                        "properties": {
+                          "type": {
+                            "const": "string"
+                          }
+                        }
+                      },
+                      "then": {
+                        "properties": {
+                          "default": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "else": {
+                        "if": {
+                          "properties": {
+                            "type": {
+                              "const": "number"
+                            }
+                          }
+                        },
+                        "then": {
+                          "properties": {
+                            "default": {
+                              "type": "number"
+                            }
+                          }
+                        },
+                        "else": {
+                          "if": {
+                            "properties": {
+                              "type": {
+                                "const": "integer"
+                              }
+                            }
+                          },
+                          "then": {
+                            "properties": {
+                              "default": {
+                                "type": "integer"
+                              }
+                            }
+                          },
+                          "else": {
+                            "if": {
+                              "properties": {
+                                "type": {
+                                  "const": "array"
+                                }
+                              }
+                            },
+                            "then": {
+                              "properties": {
+                                "default": {
+                                  "type": "array"
+                                }
+                              }
+                            },
+                            "else": {
+                              "properties": {
+                                "default": {
+                                  "type": "object"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "description"
+                      ],
+                      "propertyNames": {
+                        "enum": [
+                          "type",
+                          "items",
+                          "enum",
+                          "description",
+                          "default"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              "required": {
+                "type": "array",
+                "description": "An array of strings listing all the properties that must be present.",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "dependentRequired": {
+              "required": [
+                "properties"
+              ]
+            },
+            "propertyNames": {
+              "enum": [
+                "type",
+                "properties",
+                "required"
+              ]
+            }
+          },
+          "returns": {
+            "type": "object",
+            "description": "Describes the value of what's returned by the function.",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "array",
+                  "boolean",
+                  "integer",
+                  "number"
+                ]
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "description"
+            ],
+            "propertyNames": {
+              "enum": [
+                "type",
+                "description"
+              ]
+            }
+          },
+          "states": {
+            "type": "object",
+            "description": "Configuration on how the model will interact with the function in each Flux State. Includes descriptions, instructions, and examples.",
+            "properties": {
+              "reasoning": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "description": "A tailored description that informs the model of functionality exposed by the function.  Consider context length and keyword usage for improved plugin prompting.",
+                    "type": "string"
+                  },
+                  "instructions": {
+                    "description": "Instructions for when/how the model should invoke the function. Can be either a string or an array of strings.",
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "examples": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "propertyNames": {
+                  "enum": [
+                    "description",
+                    "instructions",
+                    "examples"
+                  ]
+                },
+                "required": [
+                  "description",
+                  "instructions"
+                ]
+              },
+              "responding": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "instructions": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "examples": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "propertyNames": {
+                  "enum": [
+                    "description",
+                    "instructions",
+                    "examples"
+                  ]
+                }
+              },
+              "disengaging": {
+                "type": "object",
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "instructions": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "examples": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "propertyNames": {
+                  "enum": [
+                    "description",
+                    "instructions",
+                    "examples"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "reasoning"
+            ],
+            "propertyNames": {
+              "enum": [
+                "reasoning",
+                "responding",
+                "disengaging"
+              ]
+            }
+          },
+          "capabilities": {
+            "type": "object",
+            "description": "Describes the capabilities of a function, such as confirmations for functions.",
+            "properties": {
+              "confirmation": {
+                "type": "object",
+                "description": "An object representing a confirmation dialog with its properties described below.",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "None",
+                      "AdaptiveCard"
+                    ]
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "Title of the confirmation dialog box."
+                  },
+                  "body": {
+                    "type": "string",
+                    "description": "Body of the confirmation dialog box."
+                  }
+                },
+                "required": [
+                  "type"
+                ],
+                "anyOf": [
+                  {
+                    "not": {
+                      "properties": {
+                        "type": { "const": "AdaptiveCard" }
+                      },
+                      "required": [ "type" ]
+                    }
+                  },
+                  { "required": [ "title", "body" ] }
+                ],
+                "propertyNames": {
+                  "enum": [
+                    "type",
+                    "title",
+                    "body"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "name_for_human",
+    "description_for_human",
+    "description_for_model",
+    "logo_url",
+    "contact_email",
+    "legal_info_url",
+    "functions"
+  ],
+  "propertyNames": {
+    "enum": [
+      "$schema",
+      "schema_version",
+      "name_for_human",
+      "description_for_human",
+      "description_for_model",
+      "logo_url",
+      "contact_email",
+      "legal_info_url",
+      "privacy_policy_url",
+      "functions"
+    ]
+  },
+  "additionalProperties": true
+}

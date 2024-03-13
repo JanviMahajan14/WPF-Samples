@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "StickyNotePlugin Plugin Request Schema",
+  "description": "Generated schema for Plugin Requests for StickyNotePlugin",
+  "type": "object",
+  "properties": {
+    "jsonrpc": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "method": true,
+    "params": true
+  },
+  "$defs": {
+    "x-metadata": {
+      "type": "object",
+      "properties": {
+        "locale": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "locale"
+      ]
+    },
+    "SayHello": {
+      "properties": {
+        "method": {
+          "const": "SayHello"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "personName": {
+              "type": "string",
+              "description": "Name of person to say hi to"
+            },
+            "x-metadata": {
+              "$ref": "#/$defs/x-metadata"
+            }
+          },
+          "required": [
+            "personName",
+            "x-metadata"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/SayHello"
+    }
+  ],
+  "required": [
+    "jsonrpc",
+    "method",
+    "params",
+    "id"
+  ],
+  "additionalProperties": false
+}

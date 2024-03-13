@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Platforms>x64;arm64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <PropertyGroup>
+	<SelfContained>true</SelfContained>
+	<PublishTrimmed>true</PublishTrimmed>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ApiManifestToSchema.exe" />
+    <None Remove="json_validator.dll" />
+    <None Remove="MicrosoftAIPluginAuthorManifestSchema.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.Plugins.Endpoints-x64" Version="724.1301.560-release.windowsCopilot.WCR.2401" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ai-settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="WindowsPluginTemplate-schema.jsonc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="windows-plugin-transport-request.json">
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
+
+  <!-- The ApiManifestToSchema tool is used to generate the required schema based on a provided API manifest. This script will be run prior to the Build target.
+  If ApiManifestToSchema.exe is missing from your machine, please install the DevTools MSIX.
+  You can run the tool from a terminal as well using: `ApiManifestToSchema.exe <path to ai-settings.json file> <path to the generated inner transport schema file>`
+  If you update the name or file path of either argument, please update the script below and the references in your Package.appxmanifest. -->
+  <Target Name="GenerateSchema" BeforeTargets="Build" Inputs="$(MSBuildProjectDirectory)\ai-settings.json" Outputs="$(MSBuildProjectDirectory)\WindowsPluginTemplate-schema.jsonc">
+    <Message Text="Executing Script: &quot;$(MSBuildProjectDirectory)\ApiManifestToSchema.exe&quot; &quot;$(MSBuildProjectDirectory)\ai-settings.json&quot; &quot;$(MSBuildProjectDirectory)\WindowsPluginTemplate-schema.jsonc&quot;" Importance="high" />
+    <Exec Command="&quot;$(MSBuildProjectDirectory)\ApiManifestToSchema.exe&quot; &quot;$(MSBuildProjectDirectory)\ai-settings.json&quot; &quot;$(MSBuildProjectDirectory)\WindowsPluginTemplate-schema.jsonc&quot;" />
+  </Target>
+
+</Project>
