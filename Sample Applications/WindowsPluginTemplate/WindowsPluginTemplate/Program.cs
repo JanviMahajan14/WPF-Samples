@@ -14,11 +14,18 @@ namespace WindowsPluginTemplate
         }
 
         // Add more functions to your plugin by using the [Endpoint] attribute:
-        // [Endpoint]
-        // public Result SayGoodbye(string personName)
-        // {
-        //     string output = Execution.Current.ResolveString("SayGoodbyeOutput", personName);
-        //     return new (output) { DescriptionForModel = $"Successfully said goodbye to {personName}." };
-        // }
+         [Endpoint]
+         public Result SayGoodbye(string personName)
+         {
+             string output = Execution.Current.ResolveString("SayGoodbyeOutput", personName);
+             return new (output) { DescriptionForModel = $"Successfully said goodbye to {personName}." };
+         }
+
+        [Endpoint]
+        public Result StickyNotes(string message)
+        {
+            string output = Execution.Current.ResolveString("message", message);
+            return new(output) { DescriptionForModel = $"Successfully opened sticky notes: {message}." };
+        }
     }
 }

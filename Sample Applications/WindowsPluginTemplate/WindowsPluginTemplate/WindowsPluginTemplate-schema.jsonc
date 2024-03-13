@@ -48,11 +48,65 @@
           "additionalProperties": false
         }
       }
+    },
+    "SayGoodbye": {
+      "properties": {
+        "method": {
+          "const": "SayGoodbye"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "personName": {
+              "type": "string",
+              "description": "Name of person to say goodbye to"
+            },
+            "x-metadata": {
+              "$ref": "#/$defs/x-metadata"
+            }
+          },
+          "required": [
+            "personName",
+            "x-metadata"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "StickyNotes": {
+      "properties": {
+        "method": {
+          "const": "StickyNotes"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "Open sticky note and paste a message in it."
+            },
+            "x-metadata": {
+              "$ref": "#/$defs/x-metadata"
+            }
+          },
+          "required": [
+            "message",
+            "x-metadata"
+          ],
+          "additionalProperties": false
+        }
+      }
     }
   },
   "oneOf": [
     {
       "$ref": "#/$defs/SayHello"
+    },
+    {
+      "$ref": "#/$defs/SayGoodbye"
+    },
+    {
+      "$ref": "#/$defs/StickyNotes"
     }
   ],
   "required": [

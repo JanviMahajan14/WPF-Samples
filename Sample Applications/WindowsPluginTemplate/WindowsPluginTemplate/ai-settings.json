@@ -30,6 +30,52 @@
         "type": "string",
         "description": "Result of 'Hello World' and person input'"
       }
+    },
+    {
+      "name": "SayGoodbye",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "personName": {
+            "type": "string",
+            "description": "Name of person to say goodbye to"
+          }
+        },
+        "required": [ "personName" ]
+      },
+      "states": {
+        "reasoning": {
+          "description": "\n# `SayGoodbye(**params) -> str`: This tool is used to say good bye to a person. `params` is the `person` the user wants to say good bye to.",
+          "instructions": "\n- Decide whether to invoke `SayGoodbye(**params)`:\n    * Is the user directly requesting me to say goodbye? If so, invoke `SayGoodbye(**params)`. Otherwise, I **must not** invoke `SayGoodbye(**params)`."
+        }
+      },
+      "returns": {
+        "type": "string",
+        "description": "Result of 'Hello World' and person input'"
+      }
+    },
+    {
+      "name": "StickyNotes",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Open sticky note and paste a message in it."
+          }
+        },
+        "required": [ "message" ]
+      },
+      "states": {
+        "reasoning": {
+          "description": "\n# `StickyNotes(**params) -> str`: This tool is used to launch sticky notes and paste a message in it.",
+          "instructions": "\n- Decide whether to invoke `StickyNotes(**params)`:\n    *  Is the user directly requesting me to open sticky notes? If so, invoke `StickyNotes(**params)`. Otherwise, I **must not** invoke `StickyNotes(**params)`."
+        }
+      },
+      "returns": {
+        "type": "string",
+        "description": "Sticky Notes Opened Successfully"
+      }
     }
   ]
 }
