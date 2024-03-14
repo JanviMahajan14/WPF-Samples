@@ -4,6 +4,7 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -12,6 +13,8 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.IO.Pipes;
+using System.Linq;
 
 namespace StickyNotesDemo
 {
@@ -32,7 +35,37 @@ namespace StickyNotesDemo
         public int ArrayPos { get; set; }
         public object[] WindowArray { get; private set; }
 
-        private void WindowLoaded(object sender, RoutedEventArgs e)
+        public void InvokedByPLugin(string message)
+        {
+            var stickyNotePasted = new Window2(message)
+            {
+                Title = "Sticky Note",
+                Tag = ArrayPos
+            };
+            WindowArray[ArrayPos] = stickyNotePasted;
+            ArrayPos++;
+        }
+
+        private async void ReadConsole()
+        {
+            await Task.Factory.StartNew(() =>
+            {
+                var server = new NamedPipeServerStream("PipesOfPiece");
+                server.WaitForConnection();
+                StreamReader reader = new StreamReader(server);
+                StreamWriter writer = new StreamWriter(server);
+                while (true)
+                {
+                    var line = reader.ReadLine();
+                    Application.Current.Dispatcher.Invoke(new Action(() => { InvokedByPLugin(line); }));
+                    //Console.WriteLine(line);
+                    //writer.WriteLine(String.Join("", line.Reverse()));
+                    //writer.Flush();
+                }
+            });
+        }
+
+        private async void WindowLoaded(object sender, RoutedEventArgs e)
         {
             WindowArray = new object[100];
 
@@ -55,6 +88,8 @@ namespace StickyNotesDemo
 
             AppWindow.MouseLeftButtonUp += MainWindow_MouseLeftButtonUp;
             AppWindow.Closing += MainWindow_Closing;
+
+            ReadConsole();
         }
 
         private void LoadNotes()
@@ -307,7 +342,8 @@ namespace StickyNotesDemo
             {
                 File.Delete("NotesFile");
             }
-            var mainDataFile = new FileStream("NotesFile", FileMode.OpenOrCreate);
+
+           /* var mainDataFile = new FileStream("NotesFile", FileMode.OpenOrCreate);
             var writer = new StreamWriter(mainDataFile);
             writer.WriteLine(index + "|" + AppWindow.Top + "|" + AppWindow.Left + "|" +
                              AppWindow.ActualHeight + "|" + AppWindow.ActualWidth + "|" +
@@ -319,7 +355,7 @@ namespace StickyNotesDemo
                 writer.WriteLine(contentIndicator[i]);
             }
             writer.Close();
-            mainDataFile.Close();
+            mainDataFile.Close();*/
         }
 
         private void AlarmTimer_Tick(object sender, EventArgs e)

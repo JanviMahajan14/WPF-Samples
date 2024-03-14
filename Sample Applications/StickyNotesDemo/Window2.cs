@@ -31,7 +31,27 @@ namespace StickyNotesDemo
             WindowStyle = WindowStyle.ToolWindow;
             Height = Width = 200;
 
-            Content = InitializeStickyNote();
+            Content = InitializeStickyNote("");
+
+            Closing += Window2_Closing;
+            SizeChanged += Window2_SizeChanged;
+            PreviewMouseLeftButtonUp += Window2_PreviewMouseLeftButtonUp;
+            ShowInTaskbar = false;
+            Show();
+            _rtb.Focus();
+        }
+
+        public Window2(string message)
+        {
+            Name = "Window2";
+
+            var lgb = ChangeBackgroundColor(Colors.Yellow);
+            Background = lgb;
+
+            WindowStyle = WindowStyle.ToolWindow;
+            Height = Width = 200;
+
+            Content = InitializeStickyNote(message);
 
             Closing += Window2_Closing;
             SizeChanged += Window2_SizeChanged;
@@ -84,7 +104,7 @@ namespace StickyNotesDemo
             _rtb.Height = ((ActualHeight - 50) > 0) ? (ActualHeight - 50) : _rtb.Height;
         }
 
-        private StackPanel InitializeStickyNote()
+        private StackPanel InitializeStickyNote(string message)
         {
             var sp = new StackPanel();
             var menu = new Menu
@@ -208,6 +228,11 @@ namespace StickyNotesDemo
                 Height = Height - 50,
                 Width = Width - 10
             };
+
+            if (message != "")
+            {
+                _rtb.AppendText(message);
+            }
             sp.Children.Add(_rtb);
 
             return sp;
